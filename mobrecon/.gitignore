@@ -1,0 +1,4 @@
+*.npy
+out/
+__pycache__/
+*.pt
