@@ -11,7 +11,6 @@ from options.base_options import BaseOptions
 from torch.utils.data import DataLoader
 from core.test_runner import Runner
 from termcolor import cprint
-from tensorboardX import SummaryWriter
 
 
 if __name__ == "__main__":

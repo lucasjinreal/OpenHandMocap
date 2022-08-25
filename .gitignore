@@ -4,3 +4,4 @@ checkpoints/
 __pycache__/
 mano_models/
 *.egg-info/
+.DS_Store
