@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+checkpoints/
+__pycache__/
+mano_models/
+*.egg-info/
