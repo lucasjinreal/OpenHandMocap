@@ -18,11 +18,12 @@ from torch.nn.parallel import DistributedDataParallel
 import pdb
 import cv2
 from . import resnet
-from handmocap.hand_modules.h3dw_networks import H3DWEncoder
+from .h3dw_networks import H3DWEncoder
 import time
 import mocap_utils.general_utils as gnu
 import smplx
 import pdb
+from alfred import device
 
 
 def extract_hand_output(output, hand_type, hand_info, top_finger_joints_type='ave', use_cuda=True):
@@ -39,7 +40,7 @@ def extract_hand_output(output, hand_type, hand_info, top_finger_joints_type='av
 
     hand_verts_idx = torch.Tensor(hand_info[f'{hand_type}_hand_verts_idx']).long()
     if use_cuda:
-        hand_verts_idx = hand_verts_idx.cuda()
+        hand_verts_idx = hand_verts_idx.to(device)
 
     hand_verts = vertices[:, hand_verts_idx, :]
     hand_verts_shift = hand_verts - joints[:, hand_start_idx:hand_start_idx+1, :]
@@ -73,7 +74,11 @@ class H3DWModel(object):
 
     def __init__(self, opt):
         self.opt = opt
-        self.Tensor = torch.cuda.FloatTensor
+
+        if torch.cuda.is_available():
+            self.Tensor = torch.cuda.FloatTensor
+        else:
+            self.Tensor = torch.FloatTensor
 
         # set params
         self.inputSize = opt.inputSize
@@ -123,10 +128,10 @@ class H3DWModel(object):
             gender = 'neutral',
             num_betas = 10,
             use_pca = False,
-            ext='pkl').cuda()
+            ext='pkl').to(device)
 
         # set encoder and optimizer
-        self.encoder = H3DWEncoder(opt, self.mean_params).cuda()
+        self.encoder = H3DWEncoder(opt, self.mean_params).to(device)
         if opt.dist:
             self.encoder = DistributedDataParallel(
                 self.encoder, device_ids=[torch.cuda.current_device()])
@@ -168,7 +173,7 @@ class H3DWModel(object):
         self.mean_params.requires_grad = False
 
         # define global rotation
-        self.global_orient = torch.zeros((self.batch_size, 3), dtype=torch.float32).cuda()
+        self.global_orient = torch.zeros((self.batch_size, 3), dtype=torch.float32).to(device)
         # self.global_orient[:, 0] = np.pi
         self.global_orient.requires_grad = False
 
@@ -190,7 +195,7 @@ class H3DWModel(object):
     def get_smplx_output(self, pose_params, shape_params=None):
         hand_rotation = pose_params[:, :3]
         hand_pose = pose_params[:, 3:]
-        body_pose = torch.zeros((self.batch_size, 63)).float().cuda() 
+        body_pose = torch.zeros((self.batch_size, 63)).float().to(device) 
         body_pose[:, 60:] = hand_rotation # set right hand rotation
 
         output = self.smplx(

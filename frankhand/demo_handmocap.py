@@ -8,16 +8,17 @@ import json
 import torch
 from torchvision.transforms import Normalize
 
-from demo.demo_options import DemoOptions
+from demo_options import DemoOptions
 import mocap_utils.general_utils as gnu
 import mocap_utils.demo_utils as demo_utils
 
-from handmocap.hand_mocap_api import HandMocap
-from handmocap.hand_bbox_detector import HandBboxDetector
+from hand_mocap_api import HandMocap
+from hand_bbox_detector import HandBboxDetector
 
 import renderer.image_utils as imu
 from renderer.viewer2D import ImShow
 import time
+from alfred import device
 
 
 def run_hand_mocap(args, bbox_detector, hand_mocap, visualizer):
@@ -155,9 +156,7 @@ def main():
     args = DemoOptions().parse()
     args.use_smplx = True
 
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    assert torch.cuda.is_available(), "Current version only supports GPU"
-
+    # device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     #Set Bbox detector
     bbox_detector =  HandBboxDetector(args.view_type, device)
 

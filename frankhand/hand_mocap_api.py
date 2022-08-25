@@ -7,8 +7,8 @@ import numpy as np
 import cv2
 from torchvision.transforms import transforms
 
-from handmocap.hand_modules.test_options import TestOptions
-from handmocap.hand_modules.h3dw_model import H3DWModel
+from hand_modules.test_options import TestOptions
+from hand_modules.h3dw_model import H3DWModel
 from mocap_utils.coordconv import convert_smpl_to_bbox, convert_bbox_to_oriIm
 
 
