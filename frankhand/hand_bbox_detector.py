@@ -37,6 +37,9 @@ class YOLOv3Detector:
         self.cfg = 'yolo3-tiny'
         self.img_size = 416
 
+        torch.set_grad_enabled(False)
+        self.__load_hand_detector()
+
     def __load_hand_detector(self):
         weights = "detectors/yolo_v3/hand-tiny_512-2021-02-19.pt"
         if "-tiny" in self.cfg:
@@ -81,10 +84,15 @@ class YOLOv3Detector:
         img_in = torch.from_numpy(img_in).unsqueeze(0).to(device)
         pred, _ = self.hand_detector(img_in)#图片检测
         detections = non_max_suppression(pred, 0.5, 0.65)[0] # nms
-
-        # Rescale boxes from 416 to true image size
-        detections[:, :4] = scale_coords(self.img_size, detections[:, :4], img.shape).round()
+        if detections is not None:
+            print(detections.shape)
+            # Rescale boxes from 416 to true image size
+            detections[:, :4] = scale_coords(self.img_size, detections[:, :4], img.shape).round()
+            detections = detections[:, :4].cpu().numpy()
+        else:
+            detections = np.array([])
         return detections
+            
 
     def detect_hand_bbox(self, img):
         """
@@ -110,12 +118,10 @@ class YOLOv3Detector:
             # assign bboxes
             # hand_bboxes = dict()
             left_id = 0
-            right_id = 1
+            right_id = 1 if num_bbox > 1 else 0
 
-            if dist_left_arm[left_id] < float("inf"):
-                hand_bboxes["left_hand"] = raw_hand_bboxes[left_id].copy()
-            if dist_right_arm[right_id] < float("inf"):
-                hand_bboxes["right_hand"] = raw_hand_bboxes[right_id].copy()
+            hand_bboxes["left_hand"] = raw_hand_bboxes[left_id].copy()
+            hand_bboxes["right_hand"] = raw_hand_bboxes[right_id].copy()
 
             hand_bbox_list[0] = hand_bboxes
         return [], [], hand_bbox_list, raw_hand_bboxes

@@ -5,10 +5,7 @@
 mkdir -p detectors
 cd detectors
 
-git clone git@github.com:jhugestar/lightweight-human-pose-estimation.pytorch.git
-if [ ! -d lightweight-human-pose-estimation.pytorch ]; then
-    git clone https://github.com/jhugestar/lightweight-human-pose-estimation.pytorch.git
-fi
+git clone https://github.com/jhugestar/lightweight-human-pose-estimation.pytorch.git
 mv lightweight-human-pose-estimation.pytorch body_pose_estimator
 
 #Download pretrained model
