@@ -7,7 +7,10 @@ Here is the result.
 
 ![](https://s1.ax1x.com/2022/08/26/v2TtUO.png)
 ![](https://s1.ax1x.com/2022/08/26/v2Td8H.png)
+![](https://github.com/jinfagang/public_images/raw/master/a.gif)
 
+
+More results are coming.
 
 We provide 2 kinds of hand mocap model:
 

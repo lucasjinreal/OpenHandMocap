@@ -3,3 +3,4 @@ out/
 __pycache__/
 *.pt
 *.pth
+*.mp4

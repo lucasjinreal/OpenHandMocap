@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
     iter = ImageSourceIter(data_f)
     visualizer = DemoVisualizer(cfg, model.faces)
-
+    video_save = iter.get_new_video_writter(256, 128, 'a.mp4')
     while iter.ok:
         itm = next(iter)
         if isinstance(itm, str):
@@ -172,4 +172,5 @@ if __name__ == "__main__":
         res = visualizer.vis(pred[0].cpu().numpy())
         cv2.imshow("res_2d", res[0])
         cv2.imshow("res_3dmesh", res[1])
+        video_save.write(np.hstack([res[0], res[1][..., :3]]))
         iter.waitKey()
