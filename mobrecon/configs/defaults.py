@@ -12,7 +12,7 @@ _C.MODEL.MANO_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..
 _C.MODEL.RESUME = ''
 _C.MODEL.KPTS_NUM = 21
 _C.MODEL.LATENT_SIZE = 256
-
+_C.MODEL.DW = False
 _C.MODEL.SPIRAL = CN()
 _C.MODEL.SPIRAL.TYPE = 'Conv'
 _C.MODEL.SPIRAL.OUT_CHANNELS = [32, 64, 128, 256]

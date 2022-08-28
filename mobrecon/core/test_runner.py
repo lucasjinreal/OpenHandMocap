@@ -418,6 +418,7 @@ class Runner(object):
                 K[0, 2] = args.size // 2
                 K[1, 2] = args.size // 2
 
+                print(input.shape)
                 out = self.model(input)
                 # silhouette
                 mask_pred = out.get("mask_pred")

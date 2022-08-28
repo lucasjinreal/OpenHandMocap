@@ -14,6 +14,28 @@ We provide 2 kinds of hand mocap model:
 - With a hand box detector: more accurate;
 - Without hand box detector, but need bodymocap, using bodymocap result to get hand box, less accurate but more pratical.
 
+Except `ohamo`, other folders are **vendor** models with our modifications. `**ohamo**` is our *OpenHandMocap System*.
+
+
+`ohamo` aiming at providing a **fast, accurate, out-of-box** 3D hand mocap system **with training code**. (`ohamo` itself is fully deployed running via ONNX doesn't need pytorch.)
+
+## Quick Start
+
+`ohamo` is our pipeline, you don't need any prerequests before running, just install some package that you might don't have:
+
+- alfred-py
+
+Then, just run:
+
+```
+python main.py -i ~/Videoes/a.mp4
+```
+
+You will get a result on hand mocap.
+
+> Be note: Our hand detection model running realtime even on CPU, it's inference is on ONNXRuntime on CPU by default. For further accerlate please using TensorRT.
+
+
 
 ## Model Supported
 

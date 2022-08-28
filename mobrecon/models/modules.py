@@ -13,7 +13,7 @@
 
 import torch.nn as nn
 import torch
-from conv.spiralconv import SpiralConv
+from .conv.spiralconv import SpiralConv
 
 
 # Basic modules
@@ -193,6 +193,7 @@ class Reg2DDecode3D(nn.Module):
         self.de_layer = nn.ModuleList()
         for idx in range(len(self.out_channels)):
             if idx == 0:
+                # self.de_layer.append(SpiralDeblock(self.out_channels[-idx - 1], self.out_channels[-idx - 1], self.spiral_indices[-idx - 1], meshconv=meshconv))
                 self.de_layer.append(SpiralDeblock(self.out_channels[-idx - 1], self.out_channels[-idx - 1], self.spiral_indices[-idx - 1], meshconv=meshconv))
             else:
                 self.de_layer.append(SpiralDeblock(self.out_channels[-idx], self.out_channels[-idx - 1], self.spiral_indices[-idx - 1], meshconv=meshconv))

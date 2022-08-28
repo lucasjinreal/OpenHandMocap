@@ -225,7 +225,8 @@ class DenseStack_Backnone(nn.Module):
         self.thrink2 = conv_layer((out_channel + input_channel), input_channel)
         self.dense_stack2 = DenseStack2(input_channel, out_channel, final_upsample=False)
         self.mid_proj = conv_layer(1024, latent_size, 1, 1, 0, bias=False, bn=False, relu=False)
-        self.reduce = conv_layer(out_channel, kpts_num, 1, bn=False, relu=False)
+        # self.reduce = conv_layer(out_channel, kpts_num, 1, bn=False, relu=False)
+        self.conv = conv_layer(out_channel, kpts_num, 1, bn=False, relu=False)
         self.uv_reg = nn.Sequential(linear_layer(latent_size, 128, bn=False), linear_layer(128, 64, bn=False),
                                     linear_layer(64, 2, bn=False, relu=False))
         self.reorg = Reorg()
@@ -245,6 +246,6 @@ class DenseStack_Backnone(nn.Module):
         thrink2 = self.thrink2(input2)
         stack2_out, stack2_mid = self.dense_stack2(thrink2)
         latent = self.mid_proj(stack2_mid)
-        uv_reg = self.uv_reg(self.reduce(stack2_out).view(stack2_out.shape[0], 21, -1))
-
+        # uv_reg = self.uv_reg(self.reduce(stack2_out).view(stack2_out.shape[0], 21, -1))
+        uv_reg = self.uv_reg(self.conv(stack2_out).view(stack2_out.shape[0], 21, -1))
         return latent, uv_reg

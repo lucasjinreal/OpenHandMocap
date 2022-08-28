@@ -226,7 +226,7 @@ def draw_3d_mesh(mesh_xyz, image_size, face):
     plt.close(fig)
     return ret
 
-def save_a_image_with_mesh_joints(image, mask, poly, cam_param, mesh_xyz, face, pose_uv, pose_xyz, file_name, padding=0, ret=False):
+def save_a_image_with_mesh_joints(image, mask, poly, cam_param, mesh_xyz, face, pose_uv, pose_xyz, file_name=None, padding=0, ret=True):
     """
     :param mesh_plot:
     :param image: H x W x 3 (np.array)

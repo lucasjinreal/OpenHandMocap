@@ -10,6 +10,7 @@ class CFGOptions():
         # parser.add_argument('--rank', type=int, default=0)
         parser.add_argument('--exp_name', type=str, default='test')
         parser.add_argument('--config_file', type=str, default='mobrecon/configs/mobrecon_lhr.yml')
+        parser.add_argument('-i', '--input', type=str, default='./images')
         parser.add_argument('--opts', type=str, nargs='+', default=[]) # default=['TRAIN.LR', 0.1]
 
         self.initialized = True

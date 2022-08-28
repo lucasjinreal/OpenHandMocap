@@ -1,1 +1,1 @@
-/Users/lewisjin/Documents/smpls/mano_v1_2/models/MANO_RIGHT.pkl
+/Users/jintian/Documents/smpl/mano_v1_2/models/MANO_RIGHT.pkl

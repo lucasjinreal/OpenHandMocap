@@ -3,6 +3,7 @@ import os
 import os.path as osp
 import torch
 import torch.backends.cudnn as cudnn
+from configs.config import get_cfg
 
 from models.mobrecon_densestack import MobRecon
 from utils.read import spiral_tramsform
@@ -12,12 +13,32 @@ from torch.utils.data import DataLoader
 from core.test_runner import Runner
 from termcolor import cprint
 
+from models.mobrecon_ds import MobRecon_DS
+
+from alfred import device, logger
+from options.cfg_options import CFGOptions
+
+
+def setup(args):
+    """
+    Create configs and perform basic setups.
+    """
+    cfg = get_cfg()
+    cfg.merge_from_file(args.config_file)
+    cfg.merge_from_list(args.opts)
+    cfg.freeze()
+    # default_setup(cfg, args)
+    return cfg
+
 
 if __name__ == "__main__":
     # get config
     args = BaseOptions().parse()
+    
+    # args = CFGOptions().parse()
+    # cfg = setup(args)
 
-    # dir prepare
+    # # dir prepare
     args.work_dir = osp.dirname(osp.realpath(__file__))
     data_fp = osp.join(args.work_dir, "../data", args.dataset)
     args.out_dir = osp.join(args.work_dir, "out", args.dataset, args.exp_name)
@@ -26,19 +47,8 @@ if __name__ == "__main__":
         utils.makedirs(osp.join(args.out_dir, args.phase))
     utils.makedirs(args.out_dir)
     utils.makedirs(args.checkpoints_dir)
-
     # device set
-    if -1 in args.device_idx or not torch.cuda.is_available():
-        device = torch.device("cpu")
-    elif len(args.device_idx) == 1:
-        device = torch.device("cuda", args.device_idx[0])
-    else:
-        device = torch.device("cuda")
     torch.set_num_threads(args.n_threads)
-
-    # deterministic
-    cudnn.benchmark = True
-    cudnn.deterministic = True
 
     if args.dataset == "Human36M":
         template_fp = osp.join(args.work_dir, "./template/template_body.ply")
@@ -56,9 +66,13 @@ if __name__ == "__main__":
                 *up_transform_list[i]._indices(),
                 up_transform_list[i]._values(),
             )
+        # logger.info(f'spiral_indices_list: {spiral_indices_list}, {up_transform_list}')
         model = MobRecon(args, spiral_indices_list, up_transform_list)
+        # model = MobRecon_DS(args)
     else:
         raise Exception("Model {} not support".format(args.model))
+    
+    # model = MobRecon_DS(cfg)
 
     # load
     epoch = 0
@@ -75,8 +89,6 @@ if __name__ == "__main__":
 
     # run
     runner = Runner(args, model, tmp["face"], device)
-    if args.phase == "demo":
-        runner.set_demo(args)
-        runner.demo()
-    else:
-        raise Exception("phase error")
+    runner.set_demo(args)
+    runner.demo()
+   
