@@ -131,8 +131,6 @@ def draw_2d_skeleton(image, pose_uv):
                 skeleton_overlay, joint_2, joint,
                 color=color_hand_joints[joint_ind] * np.array(255), thickness=int(line_wd),
                 lineType=cv2.CV_AA if cv2.__version__.startswith('2') else cv2.LINE_AA)
-
-
     return skeleton_overlay
 
 
@@ -225,6 +223,7 @@ def draw_3d_mesh(mesh_xyz, image_size, face):
     ret = fig2data(fig)
     plt.close(fig)
     return ret
+
 
 def save_a_image_with_mesh_joints(image, mask, poly, cam_param, mesh_xyz, face, pose_uv, pose_xyz, file_name=None, padding=0, ret=True):
     """

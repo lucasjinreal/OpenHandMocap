@@ -26,6 +26,41 @@ import numpy as np
 import glob
 from alfred.utils.file_io import ImageSourceIter
 import cv2
+from alfred.vis.image.pose_hand import vis_hand_pose, vis_3d_mesh_on_img
+
+
+def save_a_image_with_mesh_joints(
+    image,
+    mask,
+    poly,
+    cam_param,
+    mesh_xyz,
+    face,
+    pose_uv,
+    pose_xyz,
+    file_name=None,
+    padding=0,
+    ret=True,
+):
+    """
+    :param mesh_plot:
+    :param image: H x W x 3 (np.array)
+    :param mask: H x W (np.array)
+    :param poly: 1 x N x 2 (np.array)
+    :param cam_params: 3 x 3 (np.array)
+    :param mesh_xyz: 778 x 3 (np.array)
+    :param face: 1538 x 3 (np.array)
+    :param pose_uv: 21 x 2 (np.array)
+    :param pose_xyz: 21 x 3 (np.array)
+    :param file_name:
+    :param padding:
+    :return:
+    """
+    rend_img_overlay = vis_3d_mesh_on_img(image, cam_param, mesh_xyz, face)
+    skeleton_overlay = vis_hand_pose(image, pose_uv)
+    # skeleton_3d = draw_3d_skeleton(pose_xyz, image.shape[:2])
+    # mesh_3d = vis_3d_mesh_matplot(mesh_xyz, image.shape[:2], face)
+    return skeleton_overlay, rend_img_overlay
 
 
 class DemoVisualizer:
@@ -85,6 +120,13 @@ def setup(args):
     # default_setup(cfg, args)
     return cfg
 
+
+"""
+this is a simplified version of morecon,
+running:
+
+python demo_sim.py --config_file configs/mobrecon_ds.yml
+"""
 
 if __name__ == "__main__":
     torch.set_grad_enabled(False)
@@ -153,5 +195,6 @@ if __name__ == "__main__":
                 None,
             ]
         res = visualizer.vis(pred[0].cpu().numpy())
-        cv2.imshow("res", res)
+        cv2.imshow("res_2d", res[0])
+        cv2.imshow("res_3dmesh", res[1])
         iter.waitKey()
