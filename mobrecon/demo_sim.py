@@ -31,31 +31,11 @@ from alfred.vis.image.pose_hand import vis_hand_pose, vis_3d_mesh_on_img
 
 def save_a_image_with_mesh_joints(
     image,
-    mask,
-    poly,
     cam_param,
     mesh_xyz,
     face,
     pose_uv,
-    pose_xyz,
-    file_name=None,
-    padding=0,
-    ret=True,
 ):
-    """
-    :param mesh_plot:
-    :param image: H x W x 3 (np.array)
-    :param mask: H x W (np.array)
-    :param poly: 1 x N x 2 (np.array)
-    :param cam_params: 3 x 3 (np.array)
-    :param mesh_xyz: 778 x 3 (np.array)
-    :param face: 1538 x 3 (np.array)
-    :param pose_uv: 21 x 2 (np.array)
-    :param pose_xyz: 21 x 3 (np.array)
-    :param file_name:
-    :param padding:
-    :return:
-    """
     rend_img_overlay = vis_3d_mesh_on_img(image, cam_param, mesh_xyz, face)
     skeleton_overlay = vis_hand_pose(image, pose_uv)
     # skeleton_3d = draw_3d_skeleton(pose_xyz, image.shape[:2])
@@ -94,17 +74,12 @@ class DemoVisualizer:
             uv_conf=uv_pred_conf[0],
             poly=poly,
         )
-
-        vertex2xyz = mano_to_mpii(np.matmul(self.j_regressor, vertex))
         res = save_a_image_with_mesh_joints(
             image[..., ::-1],
-            mask_pred,
-            poly,
             self.K,
             vertex,
             self.faces[0],
             uv_point_pred[0],
-            vertex2xyz,
         )
         return res
 
